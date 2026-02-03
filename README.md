@@ -37,6 +37,19 @@ xTArchiveReporter is a .NET 9 + React 19 application that exposes Metainf aggreg
    ```
 4. Open the Vite URL (default `https://localhost:60629`) and use the filter form.
 
+### Local Publishing (IIS-ready)
+
+Before running `dotnet publish`, prepare the frontend bundle:
+
+```powershell
+cd application.xtarchivereporter.client
+npm run build
+cd ..
+dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -o publish
+```
+
+The publish target copies `application.xtarchivereporter.client/dist` into `publish/wwwroot`, so skipping `npm run build` will lead to missing static assets.
+
 ## Database Setup
 
 ### Docker SQL Server 2022

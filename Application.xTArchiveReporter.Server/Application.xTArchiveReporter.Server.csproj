@@ -24,9 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\application.xtarchivereporter.client\application.xtarchivereporter.client.esproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
+    <ClientDistFiles Include="..\application.xtarchivereporter.client\dist\**\*.*" />
   </ItemGroup>
+
+  <Target Name="CopyClientApp" AfterTargets="Publish">
+    <Message Importance="High" Text="Copying frontend dist assets into publish output..." />
+    <RemoveDir Directories="$(PublishDir)wwwroot" Condition="Exists('$(PublishDir)wwwroot')" />
+    <Copy SourceFiles="@(ClientDistFiles)"
+          DestinationFiles="@(ClientDistFiles->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
 
 </Project>
