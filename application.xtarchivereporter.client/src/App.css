@@ -1,0 +1,78 @@
+﻿:root {
+     --bs-primary: rgb(5, 30, 87);
+     --bs-primary-rgb: 5, 30, 87;
+     --bs-secondary: rgb(46, 186, 233);
+     --bs-secondary-rgb: 46, 186, 233;
+ }
+
+body, #root {
+    min-height: 100vh;
+}
+
+.bg-primary {
+    background-color: var(--bs-primary);
+}
+
+.metainf-layout {
+    background-color: var(--bs-light, #f8f9fa);
+}
+
+.metainf-layout .card {
+    border: none;
+}
+
+.metainf-layout .card-body {
+    padding: 1.75rem;
+}
+
+.metainf-layout .table-responsive {
+    max-height: calc(100vh - 220px);
+}
+
+.metainf-table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.metainf-table-wrapper table {
+    min-width: 900px;
+}
+
+.metainf-sidebar .card-body {
+    padding-top: 2.5rem;
+}
+
+.metainf-sidebar .filter-logo img {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+}
+
+.metainf-sidebar .filter-logo {
+    border-bottom: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.9);
+    border-color: rgba(var(--bs-primary-rgb), 0.9);
+}
+
+.btn-secondary {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: rgb(5, 30, 87);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(var(--bs-secondary-rgb), 0.85);
+    border-color: rgba(var(--bs-secondary-rgb), 0.85);
+    color: rgb(5, 30, 87);
+}

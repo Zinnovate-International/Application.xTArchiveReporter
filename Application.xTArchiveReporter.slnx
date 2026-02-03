@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="application.xtarchivereporter.client/application.xtarchivereporter.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj" />
+</Solution>

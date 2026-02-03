@@ -1,0 +1,51 @@
+name: Build and Package xTArchiveReporter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-package:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: application.xtarchivereporter.client
+        run: npm ci
+
+      - name: Build frontend assets
+        working-directory: application.xtarchivereporter.client
+        run: npm run build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore .NET dependencies
+        run: dotnet restore Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj
+
+      - name: Publish for IIS
+        run: dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -o publish
+
+      - name: Create deployment archive
+        run: |
+          Compress-Archive -Path publish\* -DestinationPath xTArchiveReporter_IIS.zip
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xTArchiveReporter_IIS_Package
+          path: xTArchiveReporter_IIS.zip

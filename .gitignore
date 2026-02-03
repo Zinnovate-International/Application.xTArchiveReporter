@@ -1,0 +1,40 @@
+# Build artifacts
+bin/
+obj/
+publish/
+**/bin/
+**/obj/
+
+# Visual Studio / Rider
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+
+# Logs and database
+*.log
+*.ldf
+*.mdf
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+
+# Node / Frontend
+node_modules/
+**/node_modules/
+dist/
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+**/.env
+appsettings.Development.json
+appsettings.Local.json
+
+# OS files
+.DS_Store
+Thumbs.db

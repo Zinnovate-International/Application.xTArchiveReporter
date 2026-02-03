@@ -1,0 +1,6 @@
+@Application.xTArchiveReporter.Server_HostAddress = http://localhost:5088
+
+GET {{Application.xTArchiveReporter.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
