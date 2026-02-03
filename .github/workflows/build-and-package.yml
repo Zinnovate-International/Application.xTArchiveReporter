@@ -37,15 +37,11 @@ jobs:
       - name: Restore .NET dependencies
         run: dotnet restore Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj
 
-      - name: Publish for IIS
-        run: dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -o publish
-
-      - name: Create deployment archive
-        run: |
-          Compress-Archive -Path publish\* -DestinationPath xTArchiveReporter_IIS.zip
+      - name: Publish for IIS (Web Deploy package)
+        run: dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -p:PublishProfile=IISProfile
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
           name: xTArchiveReporter_IIS_Package
-          path: xTArchiveReporter_IIS.zip
+          path: Application.xTArchiveReporter.Server/Publish/*

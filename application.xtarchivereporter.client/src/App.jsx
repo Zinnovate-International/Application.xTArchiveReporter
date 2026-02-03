@@ -18,7 +18,7 @@ function App() {
 
     const formatPath = (value) => {
         if (!value) {
-            return '\u2014'
+            return '--'
         }
 
         const prefixes = [
@@ -37,8 +37,41 @@ function App() {
         return value
     }
 
+    const normalizeDateValue = (value) => {
+        if (!value) {
+            return ''
+        }
+
+        const parsed = new Date(value)
+        if (Number.isNaN(parsed)) {
+            return value
+        }
+
+        return parsed.toISOString().slice(0, 10)
+    }
+
+    const buildErrorFromResponse = async (response) => {
+        let details = ''
+        try {
+            const contentType = response.headers.get('content-type') || ''
+            if (contentType.includes('application/json')) {
+                const body = await response.json()
+                details = typeof body === 'string' ? body : JSON.stringify(body)
+            } else {
+                details = await response.text()
+            }
+        } catch {
+            // ignore parsing errors
+        }
+
+        const suffix = details?.trim() ? ` - ${details.trim()}` : ''
+        return `HTTP ${response.status} ${response.statusText}${suffix}`
+    }
+
     const handleInputChange = (field) => (event) => {
-        setFilters((prev) => ({ ...prev, [field]: event.target.value }))
+        const { value } = event.target
+        const nextValue = field === 'startDate' || field === 'endDate' ? normalizeDateValue(value) : value
+        setFilters((prev) => ({ ...prev, [field]: nextValue }))
     }
 
     const resetFilters = () => {
@@ -49,7 +82,8 @@ function App() {
         const searchParams = new URLSearchParams()
         Object.entries(filters).forEach(([key, value]) => {
             if (value) {
-                searchParams.append(key, value)
+                const sanitized = key === 'startDate' || key === 'endDate' ? normalizeDateValue(value) : value
+                searchParams.append(key, sanitized)
             }
         })
 
@@ -69,7 +103,7 @@ function App() {
 
             const response = await fetch(url)
             if (!response.ok) {
-                throw new Error('Unable to retrieve aggregation data')
+                throw new Error(await buildErrorFromResponse(response))
             }
 
             const data = await response.json()
@@ -94,7 +128,7 @@ function App() {
 
             const response = await fetch(url)
             if (!response.ok) {
-                throw new Error('Unable to export aggregation data')
+                throw new Error(await buildErrorFromResponse(response))
             }
 
             const blob = await response.blob()
@@ -179,8 +213,11 @@ function App() {
                                         <label className="form-label" htmlFor="startDate">Start date</label>
                                         <input
                                             id="startDate"
-                                            type="date"
+                                            type="text"
+                                            inputMode="numeric"
+                                            pattern="\d{4}-\d{2}-\d{2}"
                                             className="form-control"
+                                            placeholder="yyyy-mm-dd"
                                             value={filters.startDate}
                                             onChange={handleInputChange('startDate')}
                                         />
@@ -189,8 +226,11 @@ function App() {
                                         <label className="form-label" htmlFor="endDate">End date</label>
                                         <input
                                             id="endDate"
-                                            type="date"
+                                            type="text"
+                                            inputMode="numeric"
+                                            pattern="\d{4}-\d{2}-\d{2}"
                                             className="form-control"
+                                            placeholder="yyyy-mm-dd"
                                             value={filters.endDate}
                                             onChange={handleInputChange('endDate')}
                                         />
@@ -240,7 +280,13 @@ function App() {
                                 </div>
                             )}
                             <div className="metainf-table-wrapper table-responsive flex-grow-1">
-                                <table className="table table-sm table-striped align-middle">
+                                {loading && (
+                                    <div className="table-loading-overlay" role="status" aria-live="polite">
+                                        <div className="spinner-border text-primary" role="status" aria-hidden="true"></div>
+                                        <p className="mt-2 mb-0 fw-semibold">Fetching data...</p>
+                                    </div>
+                                )}
+                                <table className={`table table-sm table-striped align-middle ${loading ? 'opacity-50' : ''}`} aria-busy={loading}>
                                     <thead className="table-light position-sticky top-0">
                                         <tr>
                                             <th scope="col">From path</th>

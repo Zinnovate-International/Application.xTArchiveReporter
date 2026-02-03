@@ -32,10 +32,22 @@ body, #root {
 .metainf-table-wrapper {
     overflow-x: auto;
     overflow-y: auto;
+    position: relative;
 }
 
 .metainf-table-wrapper table {
     min-width: 900px;
+}
+
+.table-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(248, 249, 250, 0.85);
+    z-index: 2;
 }
 
 .metainf-sidebar .card-body {

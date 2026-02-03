@@ -16,6 +16,7 @@ xTArchiveReporter is a .NET 9 + React 19 application that exposes Metainf aggreg
 - Node.js 20+
 - SQL Server 2022 / SQL Server Express / Azure SQL Edge (container instructions below)
 - PowerShell 7+ (recommended) or your preferred shell
+- IIS Hosting Bundle + Web Deploy 4.0 (only for IIS servers)
 
 ## Local Development
 
@@ -45,10 +46,10 @@ Before running `dotnet publish`, prepare the frontend bundle:
 cd application.xtarchivereporter.client
 npm run build
 cd ..
-dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -o publish
+dotnet publish Application.xTArchiveReporter.Server/Application.xTArchiveReporter.Server.csproj -c Release -p:PublishProfile=IISProfile
 ```
 
-The publish target copies `application.xtarchivereporter.client/dist` into `publish/wwwroot`, so skipping `npm run build` will lead to missing static assets.
+This uses the `IISProfile.pubxml` Web Deploy package profile, which automatically runs the SPA build script and drops `Publish\Application.xTArchiveReporter.Server.zip` ready for IIS import.
 
 ## Database Setup
 
@@ -108,12 +109,17 @@ The workflow `build-and-package.yml` runs on pushes/PRs to `main`:
 4. Uploads the zip as the `xTArchiveReporter_IIS_Package` artifact (ready for IIS deployment).
 
 ## IIS Deployment (Manual)
+
+### Server prerequisites
+
+1. Install the latest **ASP.NET Core Hosting Bundle** on the IIS machine (includes the .NET runtime + ASP.NET Core Module).
+2. Install **Web Deploy 4.0** so IIS Manager can import Web Deploy packages.
+
+### Deploy
 1. Download the workflow artifact zip.
-2. Unzip to a folder (e.g., `C:\inetpub\xTArchiveReporter`).
-3. In IIS Manager:
-   - Add a new site named `xTArchiveReporter` pointing to the extracted folder.
-   - Set the application pool to `.NET CLR v4.0` (No Managed Code) and enable 64-bit.
-4. Ensure the connection string points to your production SQL instance.
+2. Import the Web Deploy package (`Application.xTArchiveReporter.Server.zip`) in IIS Manager (Deploy > Import Application...)
+3. Point the deployment to `C:\inetpub\xTArchiveReporter` (or desired folder) and let the wizard create/update the site.
+4. Ensure the application pool runs as **No Managed Code** and that the connection string targets your production SQL instance.
 
 ## Troubleshooting
 - `Cannot open database "xTArchive" requested by the login` → Ensure the DB exists and `sa` has access.

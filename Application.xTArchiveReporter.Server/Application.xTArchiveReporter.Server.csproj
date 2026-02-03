@@ -20,18 +20,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ClosedXML" Version="0.103.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ClientDistFiles Include="..\application.xtarchivereporter.client\dist\**\*.*" />
+    <ProjectReference Include="..\application.xtarchivereporter.client\application.xtarchivereporter.client.esproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
-
-  <Target Name="CopyClientApp" AfterTargets="Publish">
-    <Message Importance="High" Text="Copying frontend dist assets into publish output..." />
-    <RemoveDir Directories="$(PublishDir)wwwroot" Condition="Exists('$(PublishDir)wwwroot')" />
-    <Copy SourceFiles="@(ClientDistFiles)"
-          DestinationFiles="@(ClientDistFiles->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
 
 </Project>

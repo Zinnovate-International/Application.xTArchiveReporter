@@ -1,3 +1,5 @@
+**/Publish/
+
 # Build artifacts
 bin/
 obj/
@@ -28,6 +30,7 @@ node_modules/
 **/node_modules/
 dist/
 *.tsbuildinfo
+Logs/
 
 # Environment / secrets
 .env
